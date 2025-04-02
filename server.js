@@ -25,8 +25,21 @@ console.log("MONGO_URI:", process.env.MONGO_URI);
 console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
 
 // Firebase initialization
+const serviceAccount = {
+  type: process.env.FIREBASE_TYPE,
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+  private_key: process.env.FIREBASE_PRIVATE_KEY,
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  client_id: process.env.FIREBASE_CLIENT_ID,
+  auth_uri: process.env.FIREBASE_AUTH_URI,
+  token_uri: process.env.FIREBASE_TOKEN_URI,
+  auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+  client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+  universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
+};
+
 try {
-  const serviceAccount = require("./firebase-service-account.json");
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   });
@@ -281,18 +294,13 @@ app.post("/start-consultation", authDoctor, async (req, res) => {
       return res.status(404).json({ error: "Patient not found" });
     }
 
+    // Initialize pushTokens if undefined
     if (!patient.pushTokens) {
       patient.pushTokens = [];
       await patient.save();
     }
 
-    if (patient.pushTokens.length === 0) {
-      console.log(`No push tokens found for patient ${patientId}, waiting briefly for registration`);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      patient = await Patient.findById(patientId);
-      if (!patient.pushTokens) patient.pushTokens = [];
-    }
-
+    // Log patient data
     console.log(`Patient data fetched for ${patientId}:`, { pushTokens: patient.pushTokens });
 
     const message = {
@@ -308,36 +316,39 @@ app.post("/start-consultation", authDoctor, async (req, res) => {
     };
 
     let notificationSent = false;
-    for (const pushToken of patient.pushTokens) {
-      message.token = pushToken;
-      console.log(`Sending FCM notification to patient ${patientId} with token: ${pushToken}`);
-      try {
-        const response = await admin.messaging().send(message);
-        console.log(`FCM notification sent successfully to ${pushToken}:`, response);
-        notificationSent = true;
-      } catch (fcmError) {
-        console.error(`FCM send failed for token ${pushToken}:`, {
-          message: fcmError.message,
-          code: fcmError.code,
-          details: fcmError.details,
-        });
-        if (fcmError.code === "messaging/registration-token-not-registered") {
-          patient.pushTokens = patient.pushTokens.filter((t) => t !== pushToken);
-          await patient.save();
-          console.log(`Removed invalid token ${pushToken} for patient ${patientId}`);
+    if (patient.pushTokens.length > 0) {
+      for (const pushToken of patient.pushTokens) {
+        message.token = pushToken;
+        console.log(`Sending FCM notification to patient ${patientId} with token: ${pushToken}`);
+        try {
+          const response = await admin.messaging().send(message);
+          console.log(`FCM notification sent successfully to ${pushToken}:`, response);
+          notificationSent = true;
+        } catch (fcmError) {
+          console.error(`FCM send failed for token ${pushToken}:`, {
+            message: fcmError.message,
+            code: fcmError.code,
+            details: fcmError.details,
+          });
+          if (fcmError.code === "messaging/registration-token-not-registered") {
+            patient.pushTokens = patient.pushTokens.filter((t) => t !== pushToken);
+            await patient.save();
+            console.log(`Removed invalid token ${pushToken} for patient ${patientId}`);
+          }
         }
       }
+    } else {
+      console.log(`No push tokens available for patient ${patientId}`);
     }
 
-    if (notificationSent || patient.pushTokens.length === 0) {
-      res.status(200).json({
-        message: notificationSent ? "Consultation started and notification sent" : "Consultation started, but no push tokens found",
-        appointmentId,
-        doctorName: doctor.name,
-      });
-    } else {
-      res.status(500).json({ error: "Failed to send notification to any valid token" });
-    }
+    // Always return success, even if no notification is sent
+    res.status(200).json({
+      message: notificationSent
+        ? "Consultation started and notification sent"
+        : "Consultation started, but no valid push tokens available",
+      appointmentId,
+      doctorName: doctor.name,
+    });
   } catch (err) {
     console.error(`Error in /start-consultation for patient ${patientId}:`, err.message);
     res.status(500).json({ error: "Failed to start consultation", details: err.message });
