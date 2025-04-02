@@ -1,0 +1,10 @@
+// backend/models/PlatformSettings.js
+const mongoose = require('mongoose');
+
+const platformSettingsSchema = new mongoose.Schema({
+  patientCommission: { type: Number, default: 30 }, // Percentage, e.g., 30
+  doctorCommission: { type: Number, default: 10 },  // Percentage, e.g., 10
+  updatedAt: { type: Date, default: Date.now },
+});
+
+module.exports = mongoose.model('PlatformSettings', platformSettingsSchema);
