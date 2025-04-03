@@ -2,8 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const https = require("https");
-const fs = require("fs");
 const { Server } = require("socket.io");
 const admin = require("firebase-admin");
 const { authDoctor } = require("./middlewares/authMiddleware");
@@ -21,8 +19,9 @@ const feedbackRoutes = require("./routes/feedback");
 const prescriptionRoutes = require("./routes/prescription");
 const adminRoutes = require("./routes/adminroutes");
 
-console.log("MONGO_URI:", process.env.MONGO_URI);
-console.log("FRONTEND_URL:", process.env.FRONTEND_URL);
+// Log critical environment variables (mask sensitive parts in production)
+console.log("MONGO_URI:", process.env.MONGO_URI ? "Set" : "Not set");
+console.log("FRONTEND_URL:", process.env.FRONTEND_URL || "Not set");
 
 // Firebase initialization
 const serviceAccount = {
@@ -50,24 +49,29 @@ try {
 }
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000; // Use Render's PORT or fallback to 5000
 const HOST = "0.0.0.0";
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "https://192.168.33.136:3000";
+const FRONTEND_URL = process.env.FRONTEND_URL || "https://turemedicine.com";
 const ALLOWED_ORIGINS = [
+  "https://turemedicine.com",
   "https://localhost:3000",
   "http://localhost:3000",
-  "https://192.168.33.136:3000",
-  "http://192.168.33.136:3000",
-  "https://192.168.33.136:5000",
 ];
 
-const options = {
-  key: fs.readFileSync("backend-key.pem"),
-  cert: fs.readFileSync("backend-cert.pem"),
-};
+app.use(cors({
+  origin: ALLOWED_ORIGINS,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
-const server = https.createServer(options, app);
+// Create HTTP server (Render handles SSL)
+const server = app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
+});
 
 const io = new Server(server, {
   cors: {
@@ -80,15 +84,6 @@ const io = new Server(server, {
   pingTimeout: 60000,
   pingInterval: 25000,
 });
-
-app.use(cors({
-  origin: ALLOWED_ORIGINS,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
-app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 
 const seedSuperAdmin = async () => {
   try {
@@ -387,8 +382,4 @@ app.post("/patients/register-push-token", async (req, res) => {
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack);
   res.status(500).json({ error: "Internal Server Error", details: err.message });
-});
-
-server.listen(PORT, HOST, () => {
-  console.log(`Server running on https://${HOST}:${PORT}`);
 });

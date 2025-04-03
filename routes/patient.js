@@ -15,10 +15,10 @@ const checkAccountStatus = async (req, res, next) => {
       return res.status(404).json({ error: 'Patient not found' });
     }
     if (patient.accountStatus === 'deactivated') {
-      return res.status(403).json({ error: 'Your account has been deactivated. Please contact support at support@truemedicine.com.' });
+      return res.status(403).json({ error: 'Your account has been deactivated. Please contact support at turemedicine@gmail.com.' });
     }
     if (patient.accountStatus === 'banned') {
-      return res.status(403).json({ error: 'Your account has been banned. Please contact support at support@truemedicine.com.' });
+      return res.status(403).json({ error: 'Your account has been banned. Please contact support at turemedicine@gmail.com.' });
     }
     next();
   } catch (error) {

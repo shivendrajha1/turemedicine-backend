@@ -138,11 +138,11 @@ const generateBookingPDF = (appointment, patient, doctor, paymentDetails) => {
 
     doc.rect(0, 0, doc.page.width, 120).fill('#3498db');
     doc.rect(0, 0, doc.page.width, 60).fill('#2980b9');
-    const logoPath = path.join(__dirname, '../assets/truemedicine-logo.png');
+    const logoPath = path.join(__dirname, '../assets/turemedicine-logo.png');
     if (fs.existsSync(logoPath)) {
       doc.image(logoPath, 40, 20, { width: 80 });
     } else {
-      doc.fontSize(25).fillColor('#ffffff').text('TrueMedicine', 40, 35);
+      doc.fontSize(25).fillColor('#ffffff').text('TureMedicine', 40, 35);
     }
     doc.fontSize(16).fillColor('#ffffff').text('Appointment Booking Confirmation', 150, 70, { align: 'center' });
     doc.fontSize(10).fillColor('#ecf0f1').text('Your Telehealth Partner', 150, 95, { align: 'center' });
@@ -183,8 +183,8 @@ const generateBookingPDF = (appointment, patient, doctor, paymentDetails) => {
 
     doc.rect(0, doc.page.height - 60, doc.page.width, 60).fill('#3498db');
     doc.fontSize(10).fillColor('#ffffff')
-      .text('TrueMedicine - A Telehealth Care Platform', 50, doc.page.height - 45, { align: 'center' })
-      .text('Contact Us: support@truemedicine.com | www.truemedicine.com', 50, doc.page.height - 30, { align: 'center' });
+      .text('TureMedicine - A Telehealth Care Platform', 50, doc.page.height - 45, { align: 'center' })
+      .text('Contact Us:turemedicine@gmail.com | www.turemedicine.com', 50, doc.page.height - 30, { align: 'center' });
 
     doc.circle(580, 50, 20).fill('#ecf0f1');
     doc.circle(560, 70, 15).fill('#bdc3c7');
@@ -207,7 +207,7 @@ const sendBookingEmail = async (patient, doctor, appointment, paymentDetails) =>
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: patient.email,
-      subject: 'TrueMedicine: Appointment Booking Confirmation',
+      subject: 'TureMedicine: Appointment Booking Confirmation',
       html: `
         <div style="font-family: Arial, sans-serif; color: #333;">
           <h2 style="color: #3498db;">Appointment Booked Successfully!</h2>
@@ -231,7 +231,7 @@ const sendBookingEmail = async (patient, doctor, appointment, paymentDetails) =>
           <p>Paid At: ${paymentDetails.paidAt ? new Date(paymentDetails.paidAt).toLocaleString() : 'N/A'}</p>
           <p style="color: #e74c3c;"><strong>Note:</strong> We will inform you when Dr. ${doctor.name} accepts or rejects your appointment.</p>
           <p>Your booking confirmation is attached below.</p>
-          <p>Best regards,<br/>The TrueMedicine Team</p>
+          <p>Best regards,<br/>The TureMedicine Team</p>
         </div>
       `,
       attachments: [
@@ -269,7 +269,7 @@ const sendDoctorAppointmentEmail = async (patient, doctor, appointment) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: doctor.email,
-    subject: 'TrueMedicine: New Appointment Request',
+    subject: 'TureMedicine: New Appointment Request',
     html: `
       <div style="font-family: Arial, sans-serif; color: #333;">
         <h2 style="color: #3498db;">New Appointment Request</h2>
@@ -283,7 +283,7 @@ const sendDoctorAppointmentEmail = async (patient, doctor, appointment) => {
         <p>Date: ${new Date(appointment.date).toLocaleString()}</p>
         <p>Symptoms: ${appointment.symptoms || 'Not provided'}</p>
         <p>Please log in to your dashboard to accept or reject this appointment.</p>
-        <p>Best regards,<br/>The TrueMedicine Team</p>
+        <p>Best regards,<br/>The TureMedicine Team</p>
       </div>
     `,
   };
@@ -375,7 +375,7 @@ const sendPrescriptionEmail = async (patient, doctor, appointment, prescription)
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: patient.email,
-      subject: 'TrueMedicine: Your Prescription is Ready',
+      subject: 'TureMedicine: Your Prescription is Ready',
       html: `
         <div style="font-family: Arial, sans-serif; color: #333;">
           <h2 style="color: #2ecc71;">Prescription Generated!</h2>
@@ -390,7 +390,7 @@ const sendPrescriptionEmail = async (patient, doctor, appointment, prescription)
           <p>Next Appointment: ${prescription.nextAppointmentDate ? new Date(prescription.nextAppointmentDate).toLocaleString() : 'N/A'}</p>
           <p>Download your prescription here: <a href="${downloadUrl}">Prescription PDF</a></p>
           ${attachments.length > 0 ? '<p>Please find your prescription PDF attached to this email.</p>' : '<p>Note: The prescription file could not be attached. Please use the download link above.</p>'}
-          <p>Best regards,<br/>The TrueMedicine Team</p>
+          <p>Best regards,<br/>The TureMedicine Team</p>
         </div>
       `,
       attachments,
@@ -880,7 +880,7 @@ const sendRejectionEmail = async (patient, doctor, appointment, reason) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: patient.email,
-    subject: 'TrueMedicine: Appointment Rejected',
+    subject: 'TureMedicine: Appointment Rejected',
     html: `
       <div style="font-family: Arial, sans-serif; color: #333;">
         <h2 style="color: #e74c3c;">Appointment Rejected</h2>
@@ -890,9 +890,9 @@ const sendRejectionEmail = async (patient, doctor, appointment, reason) => {
         <p>Appointment ID: ${appointment._id}</p>
         <p>Date: ${new Date(appointment.date).toLocaleString()}</p>
         <p>Reason for Rejection: ${reason}</p>
-        <p style="color: #3498db;"><strong>Note:</strong> You can reschedule this appointment by contacting support at <a href="mailto:support@truemedicine.com">support@truemedicine.com</a>.</p>
+        <p style="color: #3498db;"><strong>Note:</strong> You can reschedule this appointment by contacting support at <a href="mailto:turemedicine@gmail.com">turemedicine@gmail.com</a>.</p>
         <p>We apologize for any inconvenience caused.</p>
-        <p>Best regards,<br/>The TrueMedicine Team</p>
+        <p>Best regards,<br/>The TureMedicine Team</p>
       </div>
     `,
   };
@@ -1377,7 +1377,7 @@ router.post('/start-call/:appointmentId', authDoctor, async (req, res) => {
       appointmentId: appointment._id,
       doctorName: doctor.name,
       message: `Dr. ${doctor.name} has started your video consultation.`,
-      joinUrl: `https://truemedicine.com/patient/call/${appointment._id}`, // Adjust URL
+      joinUrl: `https://turemedicine.com/patient/call/${appointment._id}`, // Adjust URL
     });
 
     // Send email notification (optional fallback)
@@ -1398,7 +1398,7 @@ const sendCallStartedEmail = async (patient, doctor, appointment) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: patient.email,
-    subject: 'TrueMedicine: Your Video Consultation Has Started',
+    subject: 'TureMedicine: Your Video Consultation Has Started',
     html: `
       <div style="font-family: Arial, sans-serif; color: #333;">
         <h2 style="color: #2ecc71;">Video Consultation Started!</h2>
@@ -1407,8 +1407,8 @@ const sendCallStartedEmail = async (patient, doctor, appointment) => {
         <h3>Appointment Details</h3>
         <p>Appointment ID: ${appointment._id}</p>
         <p>Date: ${new Date(appointment.date).toLocaleString()}</p>
-        <p><strong>Please join the call immediately:</strong> <a href="https://truemedicine.com/patient/call/${appointment._id}">Join Now</a></p>
-        <p>Best regards,<br/>The TrueMedicine Team</p>
+        <p><strong>Please join the call immediately:</strong> <a href="https://turemedicine.com/patient/call/${appointment._id}">Join Now</a></p>
+        <p>Best regards,<br/>The TureMedicine Team</p>
       </div>
     `,
   };

@@ -493,16 +493,16 @@ router.put('/doctors/deactivate/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: doctor.email,
-      subject: 'Account Deactivation - TrueMedicine',
+      subject: 'Account Deactivation - TureMedicine',
       html: `
         <h2>Hello Dr. ${doctor.name},</h2>
-        <p>We regret to inform you that your account with TrueMedicine has been deactivated by our admin team.</p>
+        <p>We regret to inform you that your account with TureMedicine has been deactivated by our admin team.</p>
         <p><strong>Reason for deactivation:</strong> ${reason}</p>
-        <p>Please contact our support team at support@truemedicine.com for further assistance or to reactivate your account.</p>
+        <p>Please contact our support team at turemedicine@gmail.com.com for further assistance or to reactivate your account.</p>
         <p>Thank you for your understanding.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -549,16 +549,16 @@ router.put('/doctors/activate/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: doctor.email,
-      subject: 'Your Doctor Account Has Been Activated - TrueMedicine',
+      subject: 'Your Doctor Account Has Been Activated - TureMedicine',
       html: `
         <h2>Hello Dr. ${doctor.name},</h2>
-        <p>We are pleased to inform you that your account with TrueMedicine has been reactivated by our admin team.</p>
+        <p>We are pleased to inform you that your account with TureMedicine has been reactivated by our admin team.</p>
         ${reason ? `<p><strong>Reason for reactivation:</strong> ${reason}</p>` : ''}
         <p>You can now resume your activities on the platform. Log in at <a href="http://localhost:3000/doctor-login" style="color: #007bff; text-decoration: none;">this link</a>.</p>
-        <p>If you have any questions, contact us at support@truemedicine.com.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>If you have any questions, contact us at turemedicine@gmail.com.</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -592,16 +592,16 @@ router.delete('/doctors/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: doctor.email,
-      subject: 'Account Deletion - TrueMedicine',
+      subject: 'Account Deletion - TureMedicine',
       html: `
         <h2>Hello Dr. ${doctor.name},</h2>
-        <p>We regret to inform you that your account with TrueMedicine has been deleted by our admin team.</p>
+        <p>We regret to inform you that your account with TureMedicine has been deleted by our admin team.</p>
         <p><strong>Reason for deletion:</strong> ${reason}</p>
-        <p>If you believe this is an error, please contact our support team at support@truemedicine.com.</p>
-        <p>Thank you for your time with TrueMedicine.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>If you believe this is an error, please contact our support team at turemedicine@gmail.com.</p>
+        <p>Thank you for your time with TureMedicine.</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -638,17 +638,17 @@ router.put('/doctors/verify/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"tureMedicine" <${senderEmail}>`,
       to: doctor.email,
-      subject: 'Account Verification Successful - TrueMedicine',
+      subject: 'Account Verification Successful - TureMedicine',
       html: `
         <h2>Hello Dr. ${doctor.name},</h2>
-        <p>We are pleased to inform you that your account with TrueMedicine has been successfully verified by our admin team.</p>
+        <p>We are pleased to inform you that your account with TureMedicine has been successfully verified by our admin team.</p>
         <p>You can now log in to your dashboard and start managing your appointments and patient interactions.</p>
         <p><a href="http://localhost:3000/doctor-login" style="color: #007bff; text-decoration: none;">Click here to log in</a></p>
-        <p>If you have any questions, feel free to contact us at support@truemedicine.com.</p>
-        <p>Thank you for joining TrueMedicine!</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>If you have any questions, feel free to contact us at turemedicine@gmail.com.com.</p>
+        <p>Thank you for joining TureMedicine!</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -677,17 +677,17 @@ router.post('/doctors/reject/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: doctor.email,
-      subject: 'Account Verification Rejected - TrueMedicine',
+      subject: 'Account Verification Rejected - TureMedicine',
       html: `
         <h2>Hello Dr. ${doctor.name},</h2>
-        <p>We regret to inform you that your account with TrueMedicine has not been verified by our admin team.</p>
+        <p>We regret to inform you that your account with TureMedicine has not been verified by our admin team.</p>
         <p><strong>Reason for rejection:</strong> ${reason}</p>
-        <p>If you believe this is an error or need further clarification, please contact us at support@truemedicine.com.</p>
+        <p>If you believe this is an error or need further clarification, please contact us at turemedicine@gmail.com.</p>
         <p>You may reapply or update your documents if necessary by registering again at <a href="http://localhost:3000/doctor-signup" style="color: #007bff; text-decoration: none;">this link</a>.</p>
-        <p>Thank you for your interest in TrueMedicine.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>Thank you for your interest in TureMedicine.</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -753,16 +753,16 @@ router.put('/patients/deactivate/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: patient.email,
-      subject: 'Account Deactivation - TrueMedicine',
+      subject: 'Account Deactivation - TureMedicine',
       html: `
         <h2>Hello ${patient.name},</h2>
-        <p>We regret to inform you that your patient account with TrueMedicine has been deactivated by our admin team.</p>
+        <p>We regret to inform you that your patient account with TureMedicine has been deactivated by our admin team.</p>
         <p><strong>Reason for deactivation:</strong> ${reason}</p>
-        <p>Please contact our support team at support@truemedicine.com for further assistance or to reactivate your account.</p>
+        <p>Please contact our support team at turemedicine@gmail.com for further assistance or to reactivate your account.</p>
         <p>Thank you for your understanding.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -805,16 +805,16 @@ router.put('/patients/activate/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: patient.email,
-      subject: 'Your Patient Account Has Been Activated - TrueMedicine',
+      subject: 'Your Patient Account Has Been Activated - TureMedicine',
       html: `
         <h2>Hello ${patient.name},</h2>
-        <p>We are pleased to inform you that your patient account with TrueMedicine has been reactivated by our admin team.</p>
+        <p>We are pleased to inform you that your patient account with TureMedicine has been reactivated by our admin team.</p>
         ${reason ? `<p><strong>Reason for reactivation:</strong> ${reason}</p>` : ''}
         <p>You can now resume your activities on the platform. Log in at <a href="http://localhost:3000/login?type=patient" style="color: #007bff; text-decoration: none;">this link</a>.</p>
-        <p>If you have any questions, contact us at support@truemedicine.com.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>If you have any questions, contact us at turemedicine@gmail.com.</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -854,15 +854,15 @@ router.put('/patients/ban/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureeMedicine" <${senderEmail}>`,
       to: patient.email,
-      subject: 'Account Banned - TrueMedicine',
+      subject: 'Account Banned - TureMedicine',
       html: `
         <h2>Hello ${patient.name},</h2>
-        <p>We regret to inform you that your patient account with TrueMedicine has been banned by our admin team.</p>
+        <p>We regret to inform you that your patient account with TureMedicine has been banned by our admin team.</p>
         <p><strong>Reason for ban:</strong> ${reason}</p>
-        <p>Please contact our support team at support@truemedicine.com if you believe this is an error or for further clarification.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>Please contact our support team at turemedicine@gmail.com if you believe this is an error or for further clarification.</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -907,16 +907,16 @@ router.put('/patients/unban/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"TrueMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: patient.email,
-      subject: 'Your Account Has Been Unbanned - TrueMedicine',
+      subject: 'Your Account Has Been Unbanned - TureMedicine',
       html: `
         <h2>Hello ${patient.name},</h2>
-        <p>We are pleased to inform you that your patient account with TrueMedicine has been unbanned by our admin team.</p>
+        <p>We are pleased to inform you that your patient account with TureMedicine has been unbanned by our admin team.</p>
         ${reason ? `<p><strong>Reason for unbanning:</strong> ${reason}</p>` : ''}
         <p>You can now resume your activities on the platform. Log in at <a href="http://localhost:3000/login?type=patient" style="color: #007bff; text-decoration: none;">this link</a>.</p>
-        <p>If you have any questions, contact us at support@truemedicine.com.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>If you have any questions, contact us at turemedicine@gmail.com.</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
         <p style="font-size: 0.8em; color: #666;">This is an automated email, please do not reply directly.</p>
       `,
@@ -1339,7 +1339,7 @@ router.put('/withdrawals/approve/:id', authAdmin, async (req, res) => {
     doc.on('data', buffers.push.bind(buffers));
 
     // Write invoice content
-    doc.fontSize(20).text('TrueMedicine Withdrawal Invoice', { align: 'center' });
+    doc.fontSize(20).text('TureMedicine Withdrawal Invoice', { align: 'center' });
     doc.fontSize(12).text(`Withdrawal ID: ${withdrawal._id}`, { align: 'left' });
     doc.text(`Doctor: ${withdrawal.doctorId.name}`, { align: 'left' });
     doc.text(`Amount Requested: ₹${withdrawal.amount}`, { align: 'left' });
@@ -1376,9 +1376,9 @@ router.put('/withdrawals/approve/:id', authAdmin, async (req, res) => {
 
     // Send approval email with invoice attachment
     const mailOptions = {
-      from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+      from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
       to: withdrawal.doctorId.email,
-      subject: 'Withdrawal Approved - TrueMedicine',
+      subject: 'Withdrawal Approved - TureMedicine',
       html: `
         <h2>Hello Dr. ${withdrawal.doctorId.name},</h2>
         <p>Your withdrawal request of ₹${withdrawal.amount} has been approved.</p>
@@ -1387,7 +1387,7 @@ router.put('/withdrawals/approve/:id', authAdmin, async (req, res) => {
         <p><strong>Amount Paid:</strong> ₹${paidAmount}</p>
         <p><strong>Date of Payment:</strong> ${new Date(dateOfPayment).toLocaleString()}</p>
         <p>Please find the invoice attached for your records.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
       `,
       attachments: [
         {
@@ -1527,16 +1527,16 @@ router.put('/withdrawals/reject/:id', authAdmin, async (req, res) => {
     await withdrawal.save();
 
     await transporter.sendMail({
-      from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+      from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
       to: withdrawal.doctorId.email,
-      subject: 'Withdrawal Request Rejected - TrueMedicine',
+      subject: 'Withdrawal Request Rejected - TureMedicine',
       html: `
         <h2>Hello Dr. ${withdrawal.doctorId.name},</h2>
         <p>Your withdrawal request of ₹${withdrawal.amount} has been rejected.</p>
         <p><strong>Reason:</strong> ${reason}</p>
         <p><strong>Date of Rejection:</strong> ${new Date().toLocaleDateString()}</p>
-        <p>Please contact support@truemedicine.com if you have any questions.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>Please contact turemedicine@ggmail.com if you have any questions.</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
       `,
     });
 
@@ -1665,7 +1665,7 @@ router.post('/payments/payout/:doctorId', authAdmin, async (req, res) => {
     doc.pipe(stream);
 
     const doctor = await Doctor.findById(doctorId);
-    doc.fontSize(20).text('TrueMedicine', { align: 'center' });
+    doc.fontSize(20).text('TureMedicine', { align: 'center' });
     doc.fontSize(14).text('Payment Invoice', { align: 'center' });
     doc.moveDown();
     doc.fontSize(12).text(`Invoice Date: ${new Date().toLocaleDateString()}`);
@@ -1694,14 +1694,14 @@ router.post('/payments/payout/:doctorId', authAdmin, async (req, res) => {
 
     // Send email with invoice
     await transporter.sendMail({
-      from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+      from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
       to: doctor.email,
-      subject: 'Payout Processed - TrueMedicine',
+      subject: 'Payout Processed - TureMedicine',
       html: `
         <h2>Hello Dr. ${doctor.name},</h2>
         <p>Your payout of ₹${availableBalance.toFixed(2)} has been processed successfully.</p>
         <p>Please find the attached invoice for your records.</p>
-        <p>Best regards,<br>The TrueMedicine Team</p>
+        <p>Best regards,<br>The TureMedicine Team</p>
       `,
       attachments: [{ filename: `invoice_${withdrawal._id}.pdf`, path: invoicePath }],
     });
@@ -1981,9 +1981,9 @@ router.put('/appointments/:id/cancel', authAdmin, async (req, res) => {
       console.warn('SMTP credentials missing; skipping email');
     } else {
       const mailOptions = {
-        from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+        from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
         to: appointment.patientId.email,
-        subject: 'Appointment Cancellation - TrueMedicine',
+        subject: 'Appointment Cancellation - TureMedicine',
         html: `
           <h2>Hello ${appointment.patientId.name},</h2>
           <p>Your appointment with Dr. ${appointment.doctorId.name} has been canceled by the admin.</p>
@@ -1994,8 +1994,8 @@ router.put('/appointments/:id/cancel', authAdmin, async (req, res) => {
               ? '<p>Your refund is being processed and will be credited within 5-7 working days.</p>'
               : ''
           }
-          <p>For any queries, contact support@truemedicine.com.</p>
-          <p>Best regards,<br>The TrueMedicine Team</p>
+          <p>For any queries, contact turemedicine@gmail.com.</p>
+          <p>Best regards,<br>The TureMedicine Team</p>
         `,
       };
       await transporter.sendMail(mailOptions).catch(err => {
@@ -2068,17 +2068,17 @@ router.put('/appointments/:id/reschedule', authAdmin, async (req, res) => {
       console.warn('SMTP credentials missing; skipping email');
     } else {
       const mailOptions = {
-        from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+        from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
         to: appointment.patientId.email,
-        subject: 'Appointment Rescheduled - TrueMedicine',
+        subject: 'Appointment Rescheduled - TureMedicine',
         html: `
           <h2>Hello ${appointment.patientId.name},</h2>
           <p>Your appointment with Dr. ${appointment.doctorId.name} has been rescheduled by the admin.</p>
           <p><strong>Original Date:</strong> ${new Date(oldDate).toLocaleString()}</p>
           <p><strong>New Date:</strong> ${new Date(appointment.rescheduledDate).toLocaleString()}</p>
           <p><strong>Reason:</strong> ${reason}</p>
-          <p>For any queries, contact support@truemedicine.com.</p>
-          <p>Best regards,<br>The TrueMedicine Team</p>
+          <p>For any queries, contact tureemedicine@gmail.com.com.</p>
+          <p>Best regards,<br>The TureMedicine Team</p>
         `,
       };
       await transporter.sendMail(mailOptions).catch(err => {
@@ -2399,9 +2399,9 @@ router.post('/payments/refund/:appointmentId', authAdmin, async (req, res) => {
 
     // Send refund confirmation email
     const mailOptions = {
-      from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+      from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
       to: appointment.patientId.email,
-      subject: 'TrueMedicine: Refund Processed',
+      subject: 'TureMedicine: Refund Processed',
       html: `
         <div style="font-family: Arial, sans-serif; color: #333;">
           <h2 style="color: #2ecc71;">Refund Processed Successfully!</h2>
@@ -2415,8 +2415,8 @@ router.post('/payments/refund/:appointmentId', authAdmin, async (req, res) => {
           <p>Refunded Amount: ₹${appointment.refundDetails.amount}</p>
           <p>Refund ID: ${appointment.refundDetails.refundId}</p>
           <p><strong>Note:</strong> The amount will be credited to your original payment method within 5-7 working days.</p>
-          <p>If you have any questions, contact us at support@truemedicine.com.</p>
-          <p>Best regards,<br/>The TrueMedicine Team</p>
+          <p>If you have any questions, contact us at turemedicine@gmail.com.com.</p>
+          <p>Best regards,<br/>The TureMedicine Team</p>
         </div>
       `,
     };
@@ -2732,10 +2732,10 @@ router.post('/withdrawals/bulk-approve', authAdmin, async (req, res) => {
       w.status = 'approved';
       await w.save();
       await transporter.sendMail({
-        from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+        from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
         to: w.doctorId.email,
-        subject: 'Withdrawal Approved - TrueMedicine',
-        html: `<h2>Hello Dr. ${w.doctorId.name},</h2><p>Your withdrawal request of ₹${w.amount} has been approved and processed.</p><p>Best regards,<br>The TrueMedicine Team</p>`,
+        subject: 'Withdrawal Approved - TureMedicine',
+        html: `<h2>Hello Dr. ${w.doctorId.name},</h2><p>Your withdrawal request of ₹${w.amount} has been approved and processed.</p><p>Best regards,<br>The TureMedicine Team</p>`,
       });
     }));
 
@@ -3085,7 +3085,7 @@ router.post('/schedule-financial-report', authAdmin, async (req, res) => {
       const stream = fs.createWriteStream(invoicePath);
       doc.pipe(stream);
 
-      doc.fontSize(20).text('TrueMedicine Financial Report', { align: 'center' });
+      doc.fontSize(20).text('TureMedicine Financial Report', { align: 'center' });
       doc.fontSize(14).text(`Period: ${startOfMonth.toLocaleDateString()} to ${endOfMonth.toLocaleDateString()}`, { align: 'center' });
       doc.moveDown();
       doc.fontSize(12).text(`Total Revenue: ₹${financialData.totalRevenue.toLocaleString()}`);
@@ -3099,13 +3099,13 @@ router.post('/schedule-financial-report', authAdmin, async (req, res) => {
       await new Promise(resolve => stream.on('finish', resolve));
 
       await transporter.sendMail({
-        from: `"TrueMedicine" <${process.env.EMAIL_USER}>`,
+        from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
         to: adminEmail,
         subject: `Scheduled Financial Report - ${frequency}`,
         html: `
           <h2>Scheduled Financial Report</h2>
           <p>Please find the attached financial report for the period ${startOfMonth.toLocaleDateString()} to ${endOfMonth.toLocaleDateString()}.</p>
-          <p>Best regards,<br>The TrueMedicine Team</p>
+          <p>Best regards,<br>The TureMedicine Team</p>
         `,
         attachments: [{ filename: `financial_report_${Date.now()}.pdf`, path: invoicePath }],
       });
