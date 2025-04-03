@@ -22,6 +22,8 @@ const adminRoutes = require("./routes/adminroutes");
 // Log critical environment variables (mask sensitive parts in production)
 console.log("MONGO_URI:", process.env.MONGO_URI ? "Set" : "Not set");
 console.log("FRONTEND_URL:", process.env.FRONTEND_URL || "Not set");
+console.log("RAZORPAY_KEY_ID:", process.env.RAZORPAY_KEY_ID ? "Set" : "Not set");
+console.log("RAZORPAY_KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET ? "Set" : "Not set");
 
 // Firebase initialization
 const serviceAccount = {

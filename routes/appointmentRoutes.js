@@ -592,8 +592,12 @@ router.post('/create-order', authPatient, async (req, res) => {
       key: process.env.RAZORPAY_KEY_ID,
     });
   } catch (error) {
-    console.error('Error creating Razorpay order:', error.stack);
-    res.status(500).json({ error: 'Failed to create payment order', details: error.message });
+    console.error('Error creating Razorpay order:', {
+      message: error.message,
+      stack: error.stack,
+      razorpayError: error.response ? error.response.data : 'No additional Razorpay error details',
+    });
+    res.status(500).json({ error: 'Failed to create payment order', details: error.message || 'Unknown error' });
   }
 });
 
