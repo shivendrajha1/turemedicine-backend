@@ -352,9 +352,16 @@ app.post("/start-consultation", authDoctor, async (req, res) => {
   }
 });
 
+// Updated /patients/register-push-token endpoint
 app.post("/patients/register-push-token", async (req, res) => {
   const { patientId, token, overwrite } = req.body;
-  console.log(`Registering push token for patient ${patientId}: ${token}`);
+  console.log(`Received /patients/register-push-token request:`, { patientId, token, overwrite });
+
+  // Validate request body
+  if (!patientId || !token) {
+    console.log("Validation failed: Missing patientId or token");
+    return res.status(400).json({ error: "patientId and token are required" });
+  }
 
   try {
     const patient = await Patient.findById(patientId);
@@ -363,20 +370,40 @@ app.post("/patients/register-push-token", async (req, res) => {
       return res.status(404).json({ error: "Patient not found" });
     }
 
-    if (!patient.pushTokens) patient.pushTokens = [];
+    // Initialize pushTokens if undefined
+    if (!patient.pushTokens || !Array.isArray(patient.pushTokens)) {
+      patient.pushTokens = [];
+    }
 
+    // Handle token registration
     if (overwrite) {
+      // Overwrite with the new token
       patient.pushTokens = [token];
+      console.log(`Overwriting push tokens for patient ${patientId} with: ${token}`);
     } else {
+      // Add token if it doesn't already exist
       if (!patient.pushTokens.includes(token)) {
         patient.pushTokens.push(token);
+        console.log(`Added new push token for patient ${patientId}: ${token}`);
+      } else {
+        console.log(`Token already exists for patient ${patientId}: ${token}`);
       }
     }
+
+    // Save the updated patient document
     await patient.save();
-    console.log(`Push token updated for patient ${patientId}: ${patient.pushTokens}`);
-    res.status(200).json({ message: "Push token registered", patient });
+    console.log(`Push token updated for patient ${patientId}. Current tokens:`, patient.pushTokens);
+
+    res.status(200).json({
+      message: "Push token registered successfully",
+      patientId: patient._id,
+      pushTokens: patient.pushTokens,
+    });
   } catch (err) {
-    console.error(`Error registering push token:`, err.message);
+    console.error(`Error registering push token for patient ${patientId}:`, {
+      message: err.message,
+      stack: err.stack,
+    });
     res.status(500).json({ error: "Failed to register push token", details: err.message });
   }
 });
