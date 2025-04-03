@@ -21,6 +21,9 @@ const axios = require('axios'); // Add this at the top of appointments.js
 require('dotenv').config();
 
 // Razorpay Configuration
+console.log('RAZORPAY_KEY_ID:', process.env.RAZORPAY_KEY_ID ? 'Set' : 'Not set');
+console.log('RAZORPAY_KEY_SECRET:', process.env.RAZORPAY_KEY_SECRET ? 'Set' : 'Not set');
+
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -593,8 +596,8 @@ router.post('/create-order', authPatient, async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating Razorpay order:', {
-      message: error.message,
-      stack: error.stack,
+      message: error.message || 'No message provided',
+      stack: error.stack || 'No stack trace',
       razorpayError: error.response ? error.response.data : 'No additional Razorpay error details',
     });
     res.status(500).json({ error: 'Failed to create payment order', details: error.message || 'Unknown error' });
