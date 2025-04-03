@@ -456,6 +456,7 @@ router.get('/platform-settings', auth, async (req, res) => {
 router.post('/book', auth, async (req, res) => {
   try {
     const { patientId, name, age, gender, doctorId, date, symptoms, consultationFee, totalFee, transactionId } = req.body;
+    console.log('Received /book request:', { patientId, doctorId, transactionId });
 
     if (!name || !age || !gender || !doctorId || !date || !consultationFee || !totalFee || !transactionId) {
       return res.status(400).json({ error: 'Missing required fields, including transactionId' });
@@ -510,6 +511,7 @@ router.post('/book', auth, async (req, res) => {
     });
 
     await appointment.save();
+    console.log('Appointment booked:', appointment);
 
     const patient = await Patient.findById(patientId);
     const doctor = await Doctor.findById(doctorId);
@@ -529,31 +531,41 @@ router.post('/book', auth, async (req, res) => {
     await sendBookingEmail(patient, doctor, appointment, appointment.paymentDetails);
     await sendDoctorAppointmentEmail(patient, doctor, appointment);
 
-    res.status(201).json({ message: 'Appointment booked successfully', appointment });
+    res.status(201).json({
+      success: true,
+      message: 'Appointment booked successfully',
+      appointment,
+    });
   } catch (error) {
     console.error('Error booking appointment:', error.stack);
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
 
-// Create Razorpay Order
+
+// Create Razorpay Order with Enhanced Logging
 router.post('/create-order', authPatient, async (req, res) => {
   try {
     const { appointmentId, amount } = req.body;
+    console.log('Received /create-order request:', { appointmentId, amount, userId: req.user.id });
 
     if (!amount || isNaN(amount) || amount <= 0) {
+      console.log('Validation failed: Invalid or missing amount');
       return res.status(400).json({ error: 'Invalid or missing amount' });
     }
 
     const cleanAmount = Number(amount.toFixed(2));
+    console.log('Processed amount:', cleanAmount);
 
     if (appointmentId && !mongoose.Types.ObjectId.isValid(appointmentId)) {
+      console.log('Validation failed: Invalid appointmentId');
       return res.status(400).json({ error: 'Invalid appointmentId' });
     }
 
     if (appointmentId) {
       const appointment = await Appointment.findById(appointmentId);
       if (!appointment || appointment.patientId.toString() !== req.user.id) {
+        console.log('Authorization failed:', { appointmentExists: !!appointment, patientIdMatch: appointment?.patientId.toString() === req.user.id });
         return res.status(403).json({ error: 'Unauthorized or appointment not found' });
       }
     }
@@ -563,8 +575,16 @@ router.post('/create-order', authPatient, async (req, res) => {
       currency: 'INR',
       receipt: appointmentId ? `appointment_${appointmentId}` : `order_${Date.now()}`,
     };
+    console.log('Razorpay options:', options);
+
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      console.error('Razorpay credentials missing');
+      return res.status(500).json({ error: 'Server configuration error: Razorpay credentials missing' });
+    }
 
     const order = await razorpay.orders.create(options);
+    console.log('Razorpay order created:', order);
+
     res.json({
       orderId: order.id,
       amount: order.amount,
@@ -581,8 +601,10 @@ router.post('/create-order', authPatient, async (req, res) => {
 router.post('/verify-payment', authPatient, async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, appointmentId } = req.body;
+    console.log('Received /verify-payment request:', { razorpay_order_id, razorpay_payment_id, appointmentId });
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      console.log('Validation failed: Missing payment details');
       return res.status(400).json({ error: 'Missing payment details', success: false });
     }
 
@@ -593,26 +615,35 @@ router.post('/verify-payment', authPatient, async (req, res) => {
       .digest('hex');
 
     if (expectedSignature !== razorpay_signature) {
+      console.log('Signature verification failed');
       return res.status(400).json({ error: 'Invalid payment signature', success: false });
     }
 
+    const paymentDetails = {
+      orderId: razorpay_order_id,
+      paymentId: razorpay_payment_id,
+      signature: razorpay_signature,
+      paidAt: new Date(),
+    };
+
     if (appointmentId) {
+      if (!mongoose.Types.ObjectId.isValid(appointmentId)) {
+        console.log('Invalid appointmentId:', appointmentId);
+        return res.status(400).json({ error: 'Invalid appointmentId', success: false });
+      }
+
       const appointment = await Appointment.findByIdAndUpdate(
         appointmentId,
         {
           paymentStatus: 'paid',
           bookingStatus: 'booked',
-          paymentDetails: {
-            orderId: razorpay_order_id,
-            paymentId: razorpay_payment_id,
-            signature: razorpay_signature,
-            paidAt: new Date(),
-          },
+          paymentDetails,
         },
         { new: true }
       );
 
       if (!appointment) {
+        console.log('Appointment not found:', appointmentId);
         return res.status(404).json({ error: 'Appointment not found', success: false });
       }
 
@@ -620,6 +651,7 @@ router.post('/verify-payment', authPatient, async (req, res) => {
       const patient = await Patient.findById(appointment.patientId);
 
       if (!patient || !doctor) {
+        console.log('Patient or doctor not found:', { patientExists: !!patient, doctorExists: !!doctor });
         return res.status(500).json({ error: 'Patient or doctor not found', success: false });
       }
 
@@ -631,25 +663,21 @@ router.post('/verify-payment', authPatient, async (req, res) => {
         appointmentId,
       });
 
-      await sendBookingEmail(patient, doctor, appointment, appointment.paymentDetails);
+      await sendBookingEmail(patient, doctor, appointment, paymentDetails);
       await sendDoctorAppointmentEmail(patient, doctor, appointment);
 
       return res.json({ success: true, message: 'Payment verified and appointment booked', appointment });
     }
 
+    console.log('Payment verified without appointmentId');
     res.json({
       success: true,
       message: 'Payment verified successfully',
-      paymentDetails: {
-        orderId: razorpay_order_id,
-        paymentId: razorpay_payment_id,
-        signature: razorpay_signature,
-        paidAt: new Date(),
-      },
+      paymentDetails,
     });
   } catch (error) {
-    console.error('Error verifying Razorpay payment:', error.stack);
-    if (req.body.appointmentId) {
+    console.error('Error verifying Razorpay payment:', { message: error.message, stack: error.stack });
+    if (req.body.appointmentId && mongoose.Types.ObjectId.isValid(req.body.appointmentId)) {
       await Appointment.findByIdAndUpdate(
         req.body.appointmentId,
         { paymentStatus: 'failed', bookingStatus: 'not_booked' },
