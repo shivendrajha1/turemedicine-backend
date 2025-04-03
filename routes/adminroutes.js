@@ -322,17 +322,23 @@ router.get('/doctors/:doctorId/documents/:documentType', authAdmin, async (req, 
       b2BucketId = bucketResponse.data.buckets[0].bucketId;
     }
 
+    // Get the file name prefix by removing the bucket name prefix from filePath
+    const fileNamePrefix = filePath.replace(`${process.env.B2_BUCKET_NAME}/`, '');
+
     // Get download authorization
     const { data: auth } = await b2.getDownloadAuthorization({
       bucketId: b2BucketId,
-      fileNamePrefix: filePath.replace(`${process.env.B2_BUCKET_NAME}/`, ''),
+      fileNamePrefix: fileNamePrefix,
       validDurationInSeconds: 3600, // URL valid for 1 hour
     });
 
-    // Construct the direct download URL
-    const downloadUrl = `${b2.downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${filePath.replace(`${process.env.B2_BUCKET_NAME}/`, '')}?Authorization=${auth.authorizationToken}`;
+    // Properly encode the file path for the URL
+    const encodedFilePath = encodeURIComponent(fileNamePrefix);
 
-    // Return the URL instead of streaming the file
+    // Construct the direct download URL with encoded file path
+    const downloadUrl = `${b2.downloadUrl}/file/${process.env.B2_BUCKET_NAME}/${encodedFilePath}?Authorization=${auth.authorizationToken}`;
+
+    // Return the URL
     res.json({ url: downloadUrl });
   } catch (err) {
     console.error('Document fetch error:', {
@@ -556,7 +562,7 @@ router.put('/doctors/activate/:id', authAdmin, async (req, res) => {
         <h2>Hello Dr. ${doctor.name},</h2>
         <p>We are pleased to inform you that your account with TureMedicine has been reactivated by our admin team.</p>
         ${reason ? `<p><strong>Reason for reactivation:</strong> ${reason}</p>` : ''}
-        <p>You can now resume your activities on the platform. Log in at <a href="http://localhost:3000/doctor-login" style="color: #007bff; text-decoration: none;">this link</a>.</p>
+        <p>You can now resume your activities on the platform. Log in at <a href="https://turemedicine.com/doctor-login" style="color: #007bff; text-decoration: none;">this link</a>.</p>
         <p>If you have any questions, contact us at turemedicine@gmail.com.</p>
         <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
@@ -638,14 +644,14 @@ router.put('/doctors/verify/:id', authAdmin, async (req, res) => {
     }
 
     const mailOptions = {
-      from: `"tureMedicine" <${senderEmail}>`,
+      from: `"TureMedicine" <${senderEmail}>`,
       to: doctor.email,
       subject: 'Account Verification Successful - TureMedicine',
       html: `
         <h2>Hello Dr. ${doctor.name},</h2>
         <p>We are pleased to inform you that your account with TureMedicine has been successfully verified by our admin team.</p>
         <p>You can now log in to your dashboard and start managing your appointments and patient interactions.</p>
-        <p><a href="http://localhost:3000/doctor-login" style="color: #007bff; text-decoration: none;">Click here to log in</a></p>
+        <p><a href="https://turemedicine.com/doctor-login" style="color: #007bff; text-decoration: none;">Click here to log in</a></p>
         <p>If you have any questions, feel free to contact us at turemedicine@gmail.com.com.</p>
         <p>Thank you for joining TureMedicine!</p>
         <p>Best regards,<br>The TureMedicine Team</p>
@@ -685,7 +691,7 @@ router.post('/doctors/reject/:id', authAdmin, async (req, res) => {
         <p>We regret to inform you that your account with TureMedicine has not been verified by our admin team.</p>
         <p><strong>Reason for rejection:</strong> ${reason}</p>
         <p>If you believe this is an error or need further clarification, please contact us at turemedicine@gmail.com.</p>
-        <p>You may reapply or update your documents if necessary by registering again at <a href="http://localhost:3000/doctor-signup" style="color: #007bff; text-decoration: none;">this link</a>.</p>
+        <p>You may reapply or update your documents if necessary by registering again at <a href="https://turemedicine.com/doctor-register" style="color: #007bff; text-decoration: none;">this link</a>.</p>
         <p>Thank you for your interest in TureMedicine.</p>
         <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
@@ -812,7 +818,7 @@ router.put('/patients/activate/:id', authAdmin, async (req, res) => {
         <h2>Hello ${patient.name},</h2>
         <p>We are pleased to inform you that your patient account with TureMedicine has been reactivated by our admin team.</p>
         ${reason ? `<p><strong>Reason for reactivation:</strong> ${reason}</p>` : ''}
-        <p>You can now resume your activities on the platform. Log in at <a href="http://localhost:3000/login?type=patient" style="color: #007bff; text-decoration: none;">this link</a>.</p>
+        <p>You can now resume your activities on the platform. Log in at <a href="https://turemedicine.com/login?type=patient" style="color: #007bff; text-decoration: none;">this link</a>.</p>
         <p>If you have any questions, contact us at turemedicine@gmail.com.</p>
         <p>Best regards,<br>The TureMedicine Team</p>
         <hr>
@@ -914,7 +920,7 @@ router.put('/patients/unban/:id', authAdmin, async (req, res) => {
         <h2>Hello ${patient.name},</h2>
         <p>We are pleased to inform you that your patient account with TureMedicine has been unbanned by our admin team.</p>
         ${reason ? `<p><strong>Reason for unbanning:</strong> ${reason}</p>` : ''}
-        <p>You can now resume your activities on the platform. Log in at <a href="http://localhost:3000/login?type=patient" style="color: #007bff; text-decoration: none;">this link</a>.</p>
+        <p>You can now resume your activities on the platform. Log in at <a href="https://turemedicine.com/login?type=patient" style="color: #007bff; text-decoration: none;">this link</a>.</p>
         <p>If you have any questions, contact us at turemedicine@gmail.com.</p>
         <p>Best regards,<br>The TureMedicine Team</p>
         <hr>

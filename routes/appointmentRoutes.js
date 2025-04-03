@@ -208,7 +208,7 @@ const sendBookingEmail = async (patient, doctor, appointment, paymentDetails) =>
   try {
     // Send email with the local PDF file before uploading to B2
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
       to: patient.email,
       subject: 'TureMedicine: Appointment Booking Confirmation',
       html: `
@@ -270,7 +270,7 @@ const sendBookingEmail = async (patient, doctor, appointment, paymentDetails) =>
 // Send Doctor Appointment Email
 const sendDoctorAppointmentEmail = async (patient, doctor, appointment) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
     to: doctor.email,
     subject: 'TureMedicine: New Appointment Request',
     html: `
@@ -296,7 +296,7 @@ const sendDoctorAppointmentEmail = async (patient, doctor, appointment) => {
 // Function to send status update email (unchanged)
 const sendStatusUpdateEmail = async (patient, doctor, appointment, status) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
     to: patient.email,
     subject: `TureMedicine: Appointment ${status === 'accepted' ? 'Accepted' : 'Rejected'}`,
     html: `
@@ -319,7 +319,7 @@ const sendStatusUpdateEmail = async (patient, doctor, appointment, status) => {
 // New: Send email when appointment is completed
 const sendCompletionEmail = async (patient, doctor, appointment) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
     to: patient.email,
     subject: 'TureMedicine: Appointment Completed',
     html: `
@@ -376,7 +376,7 @@ const sendPrescriptionEmail = async (patient, doctor, appointment, prescription)
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
       to: patient.email,
       subject: 'TureMedicine: Your Prescription is Ready',
       html: `
@@ -415,7 +415,7 @@ const sendPrescriptionEmail = async (patient, doctor, appointment, prescription)
 // New: Send email when appointment is rescheduled
 const sendRescheduleEmail = async (patient, doctor, appointment, reason) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
     to: patient.email,
     subject: 'TureMedicine: Appointment Rescheduled',
     html: `
@@ -913,7 +913,7 @@ router.put('/:appointmentId/reject', authDoctor, async (req, res) => {
 // Supporting function: Send rejection email
 const sendRejectionEmail = async (patient, doctor, appointment, reason) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
     to: patient.email,
     subject: 'TureMedicine: Appointment Rejected',
     html: `
@@ -1431,7 +1431,7 @@ router.post('/start-call/:appointmentId', authDoctor, async (req, res) => {
 // New: Send email when doctor starts the call
 const sendCallStartedEmail = async (patient, doctor, appointment) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"TureMedicine" <${process.env.EMAIL_USER}>`,
     to: patient.email,
     subject: 'TureMedicine: Your Video Consultation Has Started',
     html: `
